@@ -174,6 +174,9 @@ class RansomwareRewardCalculator(RewardCalculator):
         usernames = ['NetworkService', 'vagrant', 'root', 'SYSTEM', 'pi', 'www-data']
 
         for host, info in current_state.items():
+            if host == 'success':
+                continue
+
             if 'Sessions' in info:
                 for session in info['Sessions']:
                     if session['Agent'] == self.agent_name:
@@ -197,6 +200,9 @@ class CryptominerRewardCalculator(RewardCalculator):
 
     def calculate_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool) -> float:
         for host, info in current_state.items():
+            if host == 'success':
+                continue
+
             if 'Sessions' in info:
                 for session in info['Sessions']:
                     if session['Agent'] == self.agent_name:
