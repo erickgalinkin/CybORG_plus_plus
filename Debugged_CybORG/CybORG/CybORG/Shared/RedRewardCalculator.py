@@ -154,4 +154,56 @@ class HybridImpactPwnRewardCalculator(RewardCalculator):
                                     # confidentiality, availability
             self.host_scores[host] = reward_state
 
-        
+
+class RansomwareRewardCalculator(RewardCalculator):
+    def __init__(self, agent_name: str, scenario: Scenario):
+        super(RansomwareRewardCalculator, self).__init__(agent_name)
+        self.value = 0
+        self.compromised_hosts = dict()
+
+    def reset(self):
+        self.value = 0
+
+    def calculate_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool):
+        if not done:
+            return 0.0
+
+        session_values = 0
+        self.compromised_hosts = {}
+
+        usernames = ['NetworkService', 'vagrant', 'root', 'SYSTEM', 'pi', 'www-data']
+
+        for host, info in current_state.items():
+            if 'Sessions' in info:
+                for session in info['Sessions']:
+                    if session['Agent'] == self.agent_name:
+                        confidentiality_value = self.mapping[self.scenario.get_host(host).get('ConfidentialityValue', 'Low')]
+                        session_values += confidentiality_value
+                        self.compromised_hosts[host] = confidentiality_value
+
+        self.value = session_values
+        return round(session_values, REWARD_MAX_DECIMAL_PLACES)
+
+
+class CryptominerRewardCalculator(RewardCalculator):
+    def __init__(self, agent_name: str, scenario: Scenario):
+        super(CryptominerRewardCalculator, self).__init__(agent_name)
+        self.value = 0
+        self.compromised_hosts = dict()
+
+    def reset(self):
+        self.value = 0
+        self.compromised_hosts = dict()
+
+    def calculate_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool) -> float:
+        for host, info in current_state.items():
+            if 'Sessions' in info:
+                for session in info['Sessions']:
+                    if session['Agent'] == self.agent_name:
+                        if host in self.compromised_hosts.keys():
+                            self.compromised_hosts[host] += 1
+                        else:
+                            self.compromised_hosts[host] = 1
+                        self.value += self.compromised_hosts[host]
+
+        return round(self.value, REWARD_MAX_DECIMAL_PLACES)
