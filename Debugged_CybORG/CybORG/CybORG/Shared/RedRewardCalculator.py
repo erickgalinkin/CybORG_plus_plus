@@ -159,6 +159,7 @@ class RansomwareRewardCalculator(RewardCalculator):
     def __init__(self, agent_name: str, scenario: Scenario):
         super(RansomwareRewardCalculator, self).__init__(agent_name)
         self.value = 0
+        self.scenario = scenario
         self.compromised_hosts = dict()
         self.mapping = {'None': 0.0,
                         'Low': 1.0,
@@ -196,6 +197,7 @@ class CryptominerRewardCalculator(RewardCalculator):
     def __init__(self, agent_name: str, scenario: Scenario):
         super(CryptominerRewardCalculator, self).__init__(agent_name)
         self.value = 0
+        self.scenario = scenario
         self.compromised_hosts = dict()
 
     def reset(self):
