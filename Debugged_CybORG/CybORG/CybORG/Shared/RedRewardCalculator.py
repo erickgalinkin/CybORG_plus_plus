@@ -160,6 +160,10 @@ class RansomwareRewardCalculator(RewardCalculator):
         super(RansomwareRewardCalculator, self).__init__(agent_name)
         self.value = 0
         self.compromised_hosts = dict()
+        self.mapping = {'None': 0.0,
+                        'Low': 1.0,
+                        'Medium': 2.0,
+                        'High': 10.0}
 
     def reset(self):
         self.value = 0
