@@ -14,3 +14,4 @@ from .DecoySSHD import DecoySSHD
 from .DecoySvchost import DecoySvchost
 from .DecoyTomcat import DecoyTomcat
 from .DecoyVsftpd import DecoyVsftpd
+from .execute_ransomware import ExecuteRansomware

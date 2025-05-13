@@ -168,6 +168,8 @@ class EnvironmentController:
                 self.observation[agent_name].combine_obs(agent_observation)
                 self.observation[agent_name].set_success(first_action_success)
                 agent_object.update(self.observation[agent_name])
+            if "done" in self.observation[agent_name].data.keys():
+                self.done = self.observation[agent_name].data['done']
         # if done then complete other agent's turn
 
         if agent is None:

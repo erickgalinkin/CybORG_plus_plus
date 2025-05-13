@@ -8,8 +8,9 @@ from CybORG.Shared.Actions.Action import Action
 from CybORG.Shared.BaselineRewardCalculator import BaselineRewardCalculator
 from CybORG.Shared.BlueRewardCalculator import HybridAvailabilityConfidentialityRewardCalculator
 from CybORG.Shared.Observation import Observation
-from CybORG.Shared.RedRewardCalculator import DistruptRewardCalculator, PwnRewardCalculator, \
-    HybridImpactPwnRewardCalculator
+from CybORG.Shared.RedRewardCalculator import (DistruptRewardCalculator, PwnRewardCalculator,
+                                               HybridImpactPwnRewardCalculator, RansomwareRewardCalculator,
+                                               CryptominerRewardCalculator)
 from CybORG.Shared.Results import Results
 from CybORG.Shared.RewardCalculator import RewardCalculator, EmptyRewardCalculator
 
@@ -131,6 +132,10 @@ class AgentInterface:
             calc = HybridAvailabilityConfidentialityRewardCalculator(agent_name, scenario)
         elif reward_calculator == 'HybridImpactPwn':
             calc = HybridImpactPwnRewardCalculator(agent_name, scenario)
+        elif reward_calculator == 'Ransomware':
+            calc = RansomwareRewardCalculator(agent_name, scenario)
+        elif reward_calculator == 'Cryptominer':
+            calc = CryptominerRewardCalculator(agent_name, scenario)
         else:
             raise ValueError(f"Invalid calculator selection: {reward_calculator} for agent {agent_name}")
         return calc
