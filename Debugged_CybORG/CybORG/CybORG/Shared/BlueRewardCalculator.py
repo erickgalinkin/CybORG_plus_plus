@@ -106,9 +106,11 @@ class RansomwareDefenseCalculator(RewardCalculator):
                 continue
             if host in self.compromised_hosts.keys():
                 compromised = self.compromised_hosts[host] if host in self.compromised_hosts else 0
-                new_confidentiality = self.compromised_hosts[host][0] - compromised
-                new_availability = self.compromised_hosts[host][1] - compromised
-                self.host_scores[host] = HostReward(new_confidentiality, new_availability)
+                if host in self.host_scores.keys():
+                    if isinstance(self.compromised_hosts[host], HostReward):
+                        new_confidentiality = self.compromised_hosts[host][0] - compromised
+                        new_availability = self.compromised_hosts[host][1] - compromised
+                        self.host_scores[host] = HostReward(new_confidentiality, new_availability)
 
     def calculate_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool) -> float:
         reward = (self.default_calc.calculate_reward(current_state, action, agent_observations, done) -
@@ -144,8 +146,9 @@ class CryptominerDefenseCalculator(RewardCalculator):
             if host in self.compromised_hosts.keys():
                 compromised = self.compromised_hosts[host] if host in self.compromised_hosts else 0
                 if host in self.host_scores.keys():
-                    new_confidentiality = self.compromised_hosts[host][0] - compromised
-                    self.host_scores[host] = HostReward(new_confidentiality, self.host_scores[host][1])
+                    if isinstance(self.compromised_hosts[host], HostReward):
+                        new_confidentiality = self.compromised_hosts[host][0] - compromised
+                        self.host_scores[host] = HostReward(new_confidentiality, self.host_scores[host][1])
 
     def calculate_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool) -> float:
         reward = (self.default_calc.calculate_reward(current_state, action, agent_observations, done) -
