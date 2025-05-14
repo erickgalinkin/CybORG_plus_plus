@@ -130,13 +130,13 @@ class CryptominerDefenseCalculator(RewardCalculator):
 
     def reset(self):
         self.default_calc.reset()
-        self.ransomware_calculator.reset()
+        self.cryptominer_calc.reset()
         self.compromised_hosts = dict()
 
     def _compute_host_scores(self, hostnames):
         self.default_calc._compute_host_scores(hostnames)
         self.host_scores = self.default_calc.host_scores
-        self.compromised_hosts = self.ransomware_calculator.compromised_hosts
+        self.compromised_hosts = self.cryptominer_calc.compromised_hosts
         for host in hostnames:
             if host == 'success':
                 continue
