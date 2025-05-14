@@ -119,7 +119,7 @@ class RansomwareDefenseCalculator(RewardCalculator):
         return reward
 
     def calculate_ransomware_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool) -> float:
-        reward = -self.ransomware_calc.calculate_reward(current_state, action, agent_observations, done)
+        reward = self.ransomware_calc.calculate_reward(current_state, action, agent_observations, done)
         return reward
 
 
@@ -157,5 +157,5 @@ class CryptominerDefenseCalculator(RewardCalculator):
         return reward
 
     def calculate_cryptominer_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool) -> float:
-        reward = -self.cryptominer_calc.calculate_reward(current_state, action, agent_observations, done)
+        reward = self.cryptominer_calc.calculate_reward(current_state, action, agent_observations, done)
         return reward
