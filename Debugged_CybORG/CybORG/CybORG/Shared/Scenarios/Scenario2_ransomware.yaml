@@ -74,7 +74,7 @@ Agents:
       - DecoyVsftpd
       - Restore
     agent_type: SleepAgent
-    reward_calculator_type: HybridAvailabilityConfidentiality
+    reward_calculator_type: RansomwareDefense
     starting_sessions:
       - hostname: User0
         name: VeloUser0
