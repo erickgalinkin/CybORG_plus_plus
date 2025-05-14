@@ -105,7 +105,7 @@ class RansomwareDefenseCalculator(RewardCalculator):
             if host == 'success':
                 continue
             if host in self.compromised_hosts.keys():
-                compromised = compromised_hosts[host] if host in compromised_hosts else 0
+                compromised = self.compromised_hosts[host] if host in self.compromised_hosts else 0
                 self.host_scores[host].confidentiality = self.compromised_hosts[host].confidentiality - compromised
                 self.host_scores[host].availability = self.compromised_hosts[host].availability - compromised
 
@@ -141,7 +141,7 @@ class CryptominerDefenseCalculator(RewardCalculator):
             if host == 'success':
                 continue
             if host in self.compromised_hosts.keys():
-                compromised = compromised_hosts[host] if host in compromised_hosts else 0
+                compromised = self.compromised_hosts[host] if host in self.compromised_hosts else 0
                 self.host_scores[host].confidentiality = self.compromised_hosts[host].confidentiality - compromised
 
     def calculate_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool) -> float:
