@@ -211,9 +211,9 @@ class CryptominerRewardCalculator(RewardCalculator):
                 for session in info['Sessions']:
                     if session['Agent'] == self.agent_name:
                         if host in self.compromised_hosts.keys():
-                            self.compromised_hosts[host] += 1e-9
+                            self.compromised_hosts[host] += 1e-8
                         else:
-                            self.compromised_hosts[host] = 1e-9
+                            self.compromised_hosts[host] = 1e-8
                         self.value += self.compromised_hosts[host]
 
         return round(self.value, REWARD_MAX_DECIMAL_PLACES)
