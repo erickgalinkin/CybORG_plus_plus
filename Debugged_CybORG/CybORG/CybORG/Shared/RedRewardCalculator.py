@@ -185,7 +185,7 @@ class RansomwareRewardCalculator(RewardCalculator):
                         self.compromised_hosts[host] = confidentiality_value
 
         if not done:
-            session_values = session_values / 2
+            session_values = session_values / 10
 
         self.value = session_values
         return round(session_values, REWARD_MAX_DECIMAL_PLACES)
