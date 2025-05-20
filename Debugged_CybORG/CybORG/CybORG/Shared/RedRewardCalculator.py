@@ -170,13 +170,8 @@ class RansomwareRewardCalculator(RewardCalculator):
         self.value = 0
 
     def calculate_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool):
-        if not done:
-            return 0.0
-
         session_values = 0
         self.compromised_hosts = {}
-
-        usernames = ['NetworkService', 'vagrant', 'root', 'SYSTEM', 'pi', 'www-data']
 
         for host, info in current_state.items():
             if host == 'success':
@@ -188,6 +183,9 @@ class RansomwareRewardCalculator(RewardCalculator):
                         confidentiality_value = self.mapping[self.scenario.get_host(host).get('ConfidentialityValue', 'Low')]
                         session_values += confidentiality_value
                         self.compromised_hosts[host] = confidentiality_value
+
+        if not done:
+            session_values = session_values / 2
 
         self.value = session_values
         return round(session_values, REWARD_MAX_DECIMAL_PLACES)
@@ -213,9 +211,9 @@ class CryptominerRewardCalculator(RewardCalculator):
                 for session in info['Sessions']:
                     if session['Agent'] == self.agent_name:
                         if host in self.compromised_hosts.keys():
-                            self.compromised_hosts[host] += 0.00001
+                            self.compromised_hosts[host] += 1e-9
                         else:
-                            self.compromised_hosts[host] = 0.00001
+                            self.compromised_hosts[host] = 1e-9
                         self.value += self.compromised_hosts[host]
 
         return round(self.value, REWARD_MAX_DECIMAL_PLACES)
