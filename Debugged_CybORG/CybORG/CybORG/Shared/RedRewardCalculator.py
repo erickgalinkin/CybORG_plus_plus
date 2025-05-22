@@ -180,12 +180,12 @@ class RansomwareRewardCalculator(RewardCalculator):
             if 'Sessions' in info:
                 for session in info['Sessions']:
                     if session['Agent'] == self.agent_name:
-                        confidentiality_value = self.mapping[self.scenario.get_host(host).get('ConfidentialityValue', 'Low')]
+                        if done:
+                            confidentiality_value = self.mapping[self.scenario.get_host(host).get('ConfidentialityValue', 'Low')]
+                        else:
+                            confidentiality_value = 0.1
                         session_values += confidentiality_value
                         self.compromised_hosts[host] = confidentiality_value
-
-        if not done:
-            session_values = session_values / 10
 
         self.value = session_values
         return round(session_values, REWARD_MAX_DECIMAL_PLACES)
