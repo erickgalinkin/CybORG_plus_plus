@@ -168,6 +168,7 @@ class RansomwareRewardCalculator(RewardCalculator):
 
     def reset(self):
         self.value = 0
+        self.compromised_hosts = dict()
 
     def calculate_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool):
         session_values = 0

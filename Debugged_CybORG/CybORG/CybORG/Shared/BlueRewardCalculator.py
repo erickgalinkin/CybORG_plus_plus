@@ -113,8 +113,7 @@ class RansomwareDefenseCalculator(RewardCalculator):
                         self.host_scores[host] = HostReward(new_confidentiality, new_availability)
 
     def calculate_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool) -> float:
-        reward = (self.default_calc.calculate_reward(current_state, action, agent_observations, done) -
-                  self.calculate_ransomware_reward(current_state, action, agent_observations, done))
+        reward = -self.calculate_ransomware_reward(current_state, action, agent_observations, done)
         self._compute_host_scores(current_state.keys())
         return reward
 
