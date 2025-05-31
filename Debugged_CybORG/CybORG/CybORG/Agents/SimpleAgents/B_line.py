@@ -9,8 +9,6 @@ from CybORG.Shared.Actions import PrivilegeEscalate, ExploitRemoteService, Disco
 class B_lineAgent(BaseAgent):
     def __init__(self):
         self.action = 0
-        self.target_ip_address = None
-        self.last_subnet = None
         self.last_ip_address = None
         self.action_history = {}
         self.jumps = [0, 1, 2, 2, 2, 2, 5, 5, 5, 5, 9, 9, 9, 12, 13]
