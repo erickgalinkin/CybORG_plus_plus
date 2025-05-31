@@ -25,10 +25,6 @@ class B_lineAgent(BaseAgent):
         # print(self.action)
         """gets an action from the agent that should be performed based on the agent's internal state and provided observation and action space"""
         session = 0
-        if self.initial_ip is None:
-            self.initial_ip = observation['User0']['Interface'][0]['IP Address']
-        if self.last_subnet is None:
-            self.last_subnet = observation['User0']['Interface'][0]['Subnet']
 
         while True:
             if observation['success'] == True:
@@ -48,6 +44,9 @@ class B_lineAgent(BaseAgent):
             elif self.action == 1:
                 hosts = [value for key, value in observation.items() if key != 'success']
                 get_ip = lambda x: x['Interface'][0]['IP Address']
+                if self.initial_ip is None:
+                    self.initial_ip = observation['User0']['Interface'][0]['IP Address']
+                    self.last_subnet = observation['User0']['Interface'][0]['Subnet']
                 interfaces = [get_ip(x) for x in hosts if get_ip(x) != self.initial_ip]
                 self.last_ip_address = random.choice(interfaces)
                 action = DiscoverNetworkServices(session=session, agent='Red', ip_address=self.last_ip_address)
