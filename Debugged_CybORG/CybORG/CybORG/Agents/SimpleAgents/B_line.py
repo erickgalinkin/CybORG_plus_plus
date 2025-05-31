@@ -1,10 +1,12 @@
 import random
+from logging import getLogger
 
 from CybORG.Agents import BaseAgent
 from CybORG.Shared import Results
 from CybORG.Shared.Actions import PrivilegeEscalate, ExploitRemoteService, DiscoverRemoteSystems, Impact, \
     DiscoverNetworkServices, Sleep
 
+logger = getLogger(__name__)
 
 class B_lineAgent(BaseAgent):
     def __init__(self):
@@ -12,6 +14,7 @@ class B_lineAgent(BaseAgent):
         self.last_ip_address = None
         self.action_history = {}
         self.jumps = [0, 1, 2, 2, 2, 2, 5, 5, 5, 5, 9, 9, 9, 12, 13]
+        self.exception_count = 0
 
     def train(self, results: Results):
         """allows an agent to learn a policy"""
@@ -120,8 +123,10 @@ class B_lineAgent(BaseAgent):
                     action = Impact(agent='Red', session=session, hostname='Op_Server0')
 
             except Exception as e:
+                self.exception_count += 1
                 action = Sleep()
-                print(f"Failed to execute action {self.action}. Encountered exception: {e}")
+                logger.warning(f"Failed to execute action {self.action}. Encountered exception: {e}")
+                logger.info(f"Encountered {self.exception_count} exceptions this run.")
                 self.action = 0
 
             if self.action not in self.action_history:
