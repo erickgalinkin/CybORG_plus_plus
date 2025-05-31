@@ -2,7 +2,7 @@
 from collections import namedtuple
 
 from CybORG.Shared import Scenario
-from CybORG.Shared.Actions import FindFlag, Impact
+from CybORG.Shared.Actions import FindFlag, Impact, ExecuteRansomware
 from CybORG.Shared.Actions.Action import Action
 from CybORG.Shared.Enums import OperatingSystemType
 from CybORG.Shared.RewardCalculator import RewardCalculator
@@ -14,7 +14,7 @@ ROOT_SESSION_REWARD = 0
 LOSE_SESSION_REWARD = 0
 LOSE_ROOT_SESSION_REWARD = 0
 
-REWARD_MAX_DECIMAL_PLACES = 1
+REWARD_MAX_DECIMAL_PLACES = 8
 HostReward = namedtuple('HostReward','confidentiality availability')
 
 class PwnRewardCalculator(RewardCalculator):
@@ -42,7 +42,7 @@ class PwnRewardCalculator(RewardCalculator):
         # NOTE: bug fixed -> create consistent reward behaviour
         ########################################################
         usernames = ['NetworkService', 'vagrant', 'root', 'SYSTEM', 'pi', 'www-data']
-        
+
         for host, info in current_state.items():
             if host == 'success':
                 continue
@@ -150,7 +150,7 @@ class HybridImpactPwnRewardCalculator(RewardCalculator):
                 continue
             compromised = compromised_hosts[host] if host in compromised_hosts else 0
             impacted = impacted_hosts[host] if host in impacted_hosts else 0
-            reward_state = HostReward(compromised,impacted)  
+            reward_state = HostReward(compromised,impacted)
                                     # confidentiality, availability
             self.host_scores[host] = reward_state
 
@@ -181,10 +181,12 @@ class RansomwareRewardCalculator(RewardCalculator):
             if 'Sessions' in info:
                 for session in info['Sessions']:
                     if session['Agent'] == self.agent_name:
-                        if done:
+                        if isinstance(action["Red"], ExecuteRansomware):
+                            confidentiality_value = 10 * self.mapping[self.scenario.get_host(host).get('ConfidentialityValue', 'Low')]
+                        elif self.agent_name == "Blue":
                             confidentiality_value = self.mapping[self.scenario.get_host(host).get('ConfidentialityValue', 'Low')]
                         else:
-                            confidentiality_value = 0.1
+                            confidentiality_value = 0.005
                         session_values += confidentiality_value
                         self.compromised_hosts[host] = confidentiality_value
 

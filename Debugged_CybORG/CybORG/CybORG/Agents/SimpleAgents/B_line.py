@@ -23,6 +23,10 @@ class B_lineAgent(BaseAgent):
         # print(self.action)
         """gets an action from the agent that should be performed based on the agent's internal state and provided observation and action space"""
         session = 0
+        if self.initial_ip is None:
+            self.initial_ip = observation['User0']['Interface'][0]['IP Address']
+        if self.last_subnet is None:
+            self.last_subnet = observation['User0']['Interface'][0]['Subnet']
 
         while True:
             if observation['success'] == True:

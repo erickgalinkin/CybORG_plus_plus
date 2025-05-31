@@ -79,7 +79,7 @@ class HybridAvailabilityConfidentialityRewardCalculator(RewardCalculator):
                 continue
             compromised = compromised_hosts[host] if host in compromised_hosts else 0
             impacted = impacted_hosts[host] if host in impacted_hosts else 0
-            reward_state = HostReward(compromised,impacted)  
+            reward_state = HostReward(compromised,impacted)
                                     # confidentiality, availability
             self.host_scores[host] = reward_state
 
@@ -113,7 +113,7 @@ class RansomwareDefenseCalculator(RewardCalculator):
                         self.host_scores[host] = HostReward(new_confidentiality, new_availability)
 
     def calculate_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool) -> float:
-        reward = -self.calculate_ransomware_reward(current_state, action, agent_observations, done)
+        reward = (self.default_calc.calculate_reward(current_state, action, agent_observations, done) - self.calculate_ransomware_reward(current_state, action, agent_observations, done)) / 2
         self._compute_host_scores(current_state.keys())
         return reward
 
@@ -150,8 +150,7 @@ class CryptominerDefenseCalculator(RewardCalculator):
                         self.host_scores[host] = HostReward(new_confidentiality, self.host_scores[host][1])
 
     def calculate_reward(self, current_state: dict, action: dict, agent_observations: dict, done: bool) -> float:
-        reward = (self.default_calc.calculate_reward(current_state, action, agent_observations, done) -
-                  self.calculate_cryptominer_reward(current_state, action, agent_observations, done))
+        reward = -self.calculate_cryptominer_reward(current_state, action, agent_observations, done)
         self._compute_host_scores(current_state.keys())
         return reward
 
