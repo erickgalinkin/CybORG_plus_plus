@@ -9,6 +9,8 @@ from CybORG.Shared.Actions import PrivilegeEscalate, ExploitRemoteService, Disco
 class B_lineAgent(BaseAgent):
     def __init__(self):
         self.action = 0
+        self.initial_ip = None
+        self.last_subnet = None
         self.target_ip_address = None
         self.last_subnet = None
         self.last_ip_address = None
