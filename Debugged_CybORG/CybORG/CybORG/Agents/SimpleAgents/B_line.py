@@ -14,7 +14,6 @@ class B_lineAgent(BaseAgent):
         self.last_ip_address = None
         self.action_history = {}
         self.jumps = [0, 1, 2, 2, 2, 2, 5, 5, 5, 5, 9, 9, 9, 12, 13]
-        self.exception_count = 0
 
     def train(self, results: Results):
         """allows an agent to learn a policy"""
@@ -123,13 +122,11 @@ class B_lineAgent(BaseAgent):
                     action = Impact(agent='Red', session=session, hostname='Op_Server0')
 
             except Exception as e:
-                self.exception_count += 1
+                logger.warning("Encountered exception in B_lineAgent", exc_info=e)
                 action = Sleep()
-                logger.warning(f"Failed to execute action {self.action}. Encountered exception: {e}")
-                logger.info(f"Encountered {self.exception_count} exceptions this run.")
                 self.action = 0
 
-            if self.action not in self.action_history:
+            if self.action not in self.action_history and not isinstance(action, Sleep):
                 self.action_history[self.action] = action
 
             return action
